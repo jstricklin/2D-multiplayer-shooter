@@ -5,6 +5,7 @@ using System;
 using SocketIO;
 using Project.Utility;
 using Project.Player;
+using Project.Scriptable;
 
 namespace Project.Networking {
     public class NetworkClient : SocketIOComponent
@@ -14,6 +15,8 @@ namespace Project.Networking {
         private Transform networkContainer;
         [SerializeField]
         private GameObject playerGO;
+        [SerializeField]
+        private ServerObjects serverSpawnables;
         public static string ClientID { get; private set; }
 
         private Dictionary<string, NetworkIdentity> serverObjects;
@@ -84,6 +87,42 @@ namespace Project.Networking {
                 NetworkIdentity ni = serverObjects[id];
                 ni.transform.position = new Vector3(x, y ,0);
             });
+
+            On("serverSpawn", (e) => {
+                string name = e.data["name"].str;
+                string id = e.data["id"].ToString().RemoveQuotes();
+                float x = e.data["position"]["x"].f;
+                float y = e.data["position"]["y"].f;
+                Debug.LogFormat("Server wants to spawn '{0}'", name);
+                if (!serverObjects.ContainsKey(id))
+                {
+                    ServerObjectData sod = serverSpawnables.GetObjectByName(name);
+                    var spawnObject = Instantiate(sod.Prefab, networkContainer);
+                    spawnObject.transform.position = new Vector3(x, y, 0);
+                    NetworkIdentity ni = spawnObject.GetComponent<NetworkIdentity>();
+                    ni.SetControllerID(id);
+                    ni.SetSocketReference(this);
+
+                    // if projectile apply direction as well
+                    if (name == "Arrow_Regular") 
+                    {
+                        float directionX = e.data["direction"]["x"].f;
+                        float directionY = e.data["direction"]["y"].f;
+                        
+                        float rot = Mathf.Atan2(directionY, directionX) * Mathf.Rad2Deg;
+                        Vector3 currentRotation = new Vector3(0, 0, rot + 180);
+                        spawnObject.transform.rotation = Quaternion.Euler(currentRotation);
+                    }
+                    serverObjects.Add(id, ni);
+                }
+
+            });
+            On("serverDespawn", (e) => {
+                string id = e.data["id"].ToString().RemoveQuotes();
+                NetworkIdentity ni = serverObjects[id];
+                serverObjects.Remove(id);
+                Destroy(ni.gameObject);
+            });
         }
     }
     [Serializable]
@@ -102,5 +141,12 @@ namespace Project.Networking {
     public class Rotation {
         public bool playerFlipped;
         public float weaponRotation;
+    }
+    [Serializable]
+    public class ProjectileData
+    {
+        public string id;
+        public Position position;
+        public Position direction;
     }
 }

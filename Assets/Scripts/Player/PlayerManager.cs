@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Project.Networking;
+using Project.Utility;
 using UnityEngine;
 
 namespace Project.Player {
@@ -10,6 +11,8 @@ namespace Project.Player {
         [Header("Object References")]
         [SerializeField]
         private Transform weaponPivot;
+        [SerializeField]
+        private Transform projectileSpawn;
         [Header("Data")]
         [SerializeField]
         private float speed = 4;
@@ -24,7 +27,17 @@ namespace Project.Player {
         [Header("Class References")]
         [SerializeField]
         private NetworkIdentity networkIdentity;
+        // shooting
+        private Cooldown shootingCooldown;
+        private ProjectileData projectileData;
 
+        void Start()
+        {
+            shootingCooldown = new Cooldown();
+            projectileData = new ProjectileData();
+            projectileData.position = new Position();
+            projectileData.direction = new Position();
+        }
         // Update is called once per frame
         void Update()
         {
@@ -32,8 +45,28 @@ namespace Project.Player {
             {
                 CheckMovement();
                 CheckAiming();
+                CheckShooting();
             }
         }
+
+        private void CheckShooting()
+        {
+            shootingCooldown.CooldownUpdate();
+            if (Input.GetMouseButton(0) && !shootingCooldown.IsOnCooldown())
+            {
+                shootingCooldown.StartCooldown();
+
+                // define bullet
+                projectileData.position.x = projectileSpawn.position.x.TwoDecimals();
+                projectileData.position.y = projectileSpawn.position.y.TwoDecimals();
+
+                projectileData.direction.x = projectileSpawn.up.x;
+                projectileData.direction.y = projectileSpawn.up.y;
+                //send bullet
+                networkIdentity.GetSocket().Emit("fireProjectile", new JSONObject(JsonUtility.ToJson(projectileData)));
+            }
+        }
+
         public bool GetLastFlipped()
         {
             return lastFlipped;
@@ -46,7 +79,6 @@ namespace Project.Player {
 
         public void SetWeaponRotation(float value)
         {
-            Debug.Log("setting weapon rotation");
             weaponPivot.rotation = Quaternion.Euler(0, 0, value + WEAPON_ROTATION_OFFSET);
             // weaponPivot.rotation = Quaternion.Euler(0, 0, value);
         }

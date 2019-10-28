@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using SocketIO;
 using System;
+using SocketIO;
+using Project.Utility;
+using Project.Player;
 
 namespace Project.Networking {
     public class NetworkClient : SocketIOComponent
@@ -12,8 +14,10 @@ namespace Project.Networking {
         private Transform networkContainer;
         [SerializeField]
         private GameObject playerGO;
+        public static string ClientID { get; private set; }
 
-        private Dictionary<string, GameObject> serverObjects;
+        private Dictionary<string, NetworkIdentity> serverObjects;
+                
         // Start is called before the first frame update
         public override void Start()
         {
@@ -24,7 +28,7 @@ namespace Project.Networking {
 
         private void Initialize()
         {
-            serverObjects = new Dictionary<string, GameObject>();
+            serverObjects = new Dictionary<string, NetworkIdentity>();
         }
 
         // Update is called once per frame
@@ -40,34 +44,63 @@ namespace Project.Networking {
             });
 
             On("register", (e) => {
-                string id = e.data["id"].ToString();
-                Debug.LogFormat("Our Client's Id is ({0})", id);
-
+                ClientID = e.data["id"].ToString().RemoveQuotes();
+                // Debug.LogFormat("Our Client's Id is ({0})", ClientID);
             });
 
             On("spawn", (e) => {
                 // handling all spawned players
-                string id = e.data["id"].ToString();
+                string id = e.data["id"].ToString().RemoveQuotes();
 
-                GameObject go = new GameObject("Server ID: " + id);
-                go.transform.SetParent(networkContainer);
-                serverObjects.Add(id, go);
-                GameObject toSpawn = Instantiate(playerGO);
-                toSpawn.name = "Player GO - ID: " + id;
+                GameObject go = Instantiate(playerGO, networkContainer);
+                go.name = string.Format("Player ({0})", id);
+                NetworkIdentity ni = go.GetComponent<NetworkIdentity>();
+                ni.SetControllerID(id);
+                ni.SetSocketReference(this);
+                serverObjects.Add(id, ni);
             });
 
-            On("disconnect", (e) => {
-                string id = e.data["id"].ToString();
-
-                GameObject go = serverObjects[id];
+            On("disconnected", (e) => {
+                string id = e.data["id"].ToString().RemoveQuotes();
+                Debug.Log("player disconnected");
+                GameObject go = serverObjects[id].gameObject;
                 Destroy(go); // remove GO from game
                 serverObjects.Remove(id);
+            });
 
+            On("updateRotation", (e) => {
+                string id = e.data["id"].ToString().RemoveQuotes();
+                float weaponRot = e.data["weaponRotation"].f;
+                bool flipped = e.data["playerFlipped"].b;
+                NetworkIdentity ni = serverObjects[id];
+                Debug.Log("updating other rotations");
+                ni.GetComponent<PlayerManager>().SetWeaponRotation(weaponRot);
+            });
+
+            On("updatePosition", (e) => {
+                string id = e.data["id"].ToString().RemoveQuotes();
+                float x = e.data["position"]["x"].f;
+                float y = e.data["position"]["y"].f;
+                NetworkIdentity ni = serverObjects[id];
+                ni.transform.position = new Vector3(x, y ,0);
             });
         }
-        void RemoveQuotes()
-        {
-
-        }
+    }
+    [Serializable]
+    public class Player
+    {
+        public string id;
+        public Position position;
+        public Rotation rotation;
+    }
+    [Serializable]
+    public class Position {
+        public float x;
+        public float y;
+    }
+    [Serializable]
+    public class Rotation {
+        public bool playerFlipped;
+        public float weaponRotation;
     }
 }

@@ -93,9 +93,9 @@ namespace Project.Networking {
                 string id = e.data["id"].ToString().RemoveQuotes();
                 float x = e.data["position"]["x"].f;
                 float y = e.data["position"]["y"].f;
-                Debug.LogFormat("Server wants to spawn '{0}'", name);
                 if (!serverObjects.ContainsKey(id))
                 {
+                    // Debug.LogFormat("Server wants to spawn '{0}'", name);
                     ServerObjectData sod = serverSpawnables.GetObjectByName(name);
                     var spawnObject = Instantiate(sod.Prefab, networkContainer);
                     spawnObject.transform.position = new Vector3(x, y, 0);

@@ -345,6 +345,7 @@ MonoBehaviour:
   networkContainer: {fileID: 681009803}
   playerGO: {fileID: 4081714164579572075, guid: ed8963226141a43dbad5ef583502732e,
     type: 3}
+  serverSpawnables: {fileID: 11400000, guid: 3cd598131e485452188eebdd99c95a34, type: 2}
 --- !u!4 &1907895821
 Transform:
   m_ObjectHideFlags: 0

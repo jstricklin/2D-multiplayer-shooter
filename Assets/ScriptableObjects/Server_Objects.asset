@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Server_Objects
   m_EditorClassIdentifier: 
   serverObjects:
-  - Name: Arrow
-    Prefab: {fileID: 2363238809513327961, guid: 2f935d6bc5aeb4cdca6245a99e56eb4e,
+  - Name: Arrow_Regular
+    Prefab: {fileID: 4921048049649154716, guid: d78c8cb18f9cb418e92bc0047649882a,
       type: 3}

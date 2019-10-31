@@ -57,6 +57,7 @@ namespace Project.Player {
                 shootingCooldown.StartCooldown();
 
                 // define bullet
+                projectileData.activator = NetworkClient.ClientID;
                 projectileData.position.x = projectileSpawn.position.x.TwoDecimals();
                 projectileData.position.y = projectileSpawn.position.y.TwoDecimals();
 

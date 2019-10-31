@@ -6,6 +6,7 @@ using SocketIO;
 using Project.Utility;
 using Project.Player;
 using Project.Scriptable;
+using Project.Gameplay;
 
 namespace Project.Networking {
     public class NetworkClient : SocketIOComponent
@@ -108,14 +109,17 @@ namespace Project.Networking {
                     {
                         float directionX = e.data["direction"]["x"].f;
                         float directionY = e.data["direction"]["y"].f;
-                        
+                        string activator = e.data["activator"].ToString().RemoveQuotes();
+
                         float rot = Mathf.Atan2(directionY, directionX) * Mathf.Rad2Deg;
                         Vector3 currentRotation = new Vector3(0, 0, rot + 180);
                         spawnObject.transform.rotation = Quaternion.Euler(currentRotation);
+
+                        WhoActivatedMe whoActivatedMe = spawnObject.GetComponent<WhoActivatedMe>();
+                        whoActivatedMe.SetActivator(activator);
                     }
                     serverObjects.Add(id, ni);
                 }
-
             });
             On("serverDespawn", (e) => {
                 string id = e.data["id"].ToString().RemoveQuotes();
@@ -146,7 +150,12 @@ namespace Project.Networking {
     public class ProjectileData
     {
         public string id;
+        public string activator;
         public Position position;
         public Position direction;
+    }
+    [Serializable]
+    public class IDData {
+        public string id;
     }
 }

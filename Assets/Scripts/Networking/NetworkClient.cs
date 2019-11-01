@@ -77,7 +77,7 @@ namespace Project.Networking {
                 float weaponRot = e.data["weaponRotation"].f;
                 bool flipped = e.data["playerFlipped"].b;
                 NetworkIdentity ni = serverObjects[id];
-                Debug.Log("updating other rotations");
+                // Debug.Log("updating other rotations");
                 ni.GetComponent<PlayerManager>().SetWeaponRotation(weaponRot);
             });
 
@@ -86,7 +86,7 @@ namespace Project.Networking {
                 float x = e.data["position"]["x"].f;
                 float y = e.data["position"]["y"].f;
                 NetworkIdentity ni = serverObjects[id];
-                ni.transform.position = new Vector3(x, y ,0);
+                ni.transform.position = new Vector3(x, y, 0);
             });
 
             On("serverSpawn", (e) => {
@@ -126,6 +126,19 @@ namespace Project.Networking {
                 NetworkIdentity ni = serverObjects[id];
                 serverObjects.Remove(id);
                 Destroy(ni.gameObject);
+            });
+            On("playerDied", (e) => {
+                string id = e.data["id"].ToString().RemoveQuotes();
+                NetworkIdentity ni = serverObjects[id];
+                ni.gameObject.SetActive(false);
+            });
+            On("playerRespawn", (e) => {
+                string id = e.data["id"].ToString().RemoveQuotes();
+                float x = e.data["position"]["x"].f;
+                float y = e.data["position"]["y"].f;
+                NetworkIdentity ni = serverObjects[id];
+                ni.transform.position = new Vector3(x, y, 0);
+                ni.gameObject.SetActive(true);
             });
         }
     }

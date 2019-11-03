@@ -141,6 +141,9 @@ namespace Project.Networking {
                 ni.gameObject.SetActive(true);
             });
         }
+        public void AttemptToJoinLobby() {
+            Emit("joinGame");
+        }
     }
     [Serializable]
     public class Player

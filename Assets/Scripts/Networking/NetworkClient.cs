@@ -51,7 +51,7 @@ namespace Project.Networking {
 
             On("register", (e) => {
                 ClientID = e.data["id"].ToString().RemoveQuotes();
-                // Debug.LogFormat("Our Client's Id is ({0})", ClientID);
+                Debug.LogFormat("Our Client's Id is ({0})", ClientID);
             });
 
             On("spawn", (e) => {
@@ -147,7 +147,14 @@ namespace Project.Networking {
                 ni.transform.position = new Vector3(x, y, 0);
                 ni.gameObject.SetActive(true);
             });
+            On("loadGame", (e) => {
+                Debug.Log("switching to game");
+                SceneManagementManager.Instance.LoadLevel(levelName: SceneList.LEVEL, onLevelLoaded: (levelName) => {
+                    SceneManagementManager.Instance.UnLoadLevel(SceneList.MAIN_MENU);
+                });
+            });
         }
+
         public void AttemptToJoinLobby() {
             Emit("joinGame");
         }

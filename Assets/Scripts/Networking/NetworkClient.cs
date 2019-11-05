@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using UnitySocketIO;
 using UnitySocketIO.SocketIO;
+using UnitySocketIO.Events;
 using Project.Utility;
 using Project.Player;
 using Project.Scriptable;
@@ -28,9 +29,9 @@ namespace Project.Networking {
         // Start is called before the first frame update
         public void Start()
         {
-            base.Connect();
             Initialize();
             SetupEvents();
+            base.Connect();
         }
 
         private void Initialize()
@@ -108,7 +109,7 @@ namespace Project.Networking {
                     spawnObject.transform.position = new Vector3(x, y, 0);
                     NetworkIdentity ni = spawnObject.GetComponent<NetworkIdentity>();
                     ni.SetControllerID(id);
-                    ni.SetSocketReference(this.socketIO);
+                    ni.SetSocketReference(base.socketIO);
 
                     // if projectile apply direction as well
                     if (name == "Arrow_Regular") 

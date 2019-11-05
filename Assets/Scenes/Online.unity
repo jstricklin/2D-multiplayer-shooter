@@ -184,10 +184,10 @@ MonoBehaviour:
     url: 127.0.0.1
     port: 52300
     sslEnabled: 0
-    reconnectTime: 5
-    timeToDropAck: 4
-    pingTimeout: 30
-    pingInterval: 10
+    reconnectTime: 400
+    timeToDropAck: 200
+    pingTimeout: 50
+    pingInterval: 50
   socketIO: {fileID: 0}
   networkContainer: {fileID: 910911684}
   playerGO: {fileID: 4081714164579572075, guid: ed8963226141a43dbad5ef583502732e,

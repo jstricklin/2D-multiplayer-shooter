@@ -16,7 +16,7 @@ namespace Project.Managers {
         private BaseSocketIO socketReference;
         private BaseSocketIO SocketReference {
             get {
-                return socketReference = (socketReference == null) ? FindObjectOfType<NetworkClient>().socketIO : socketReference;
+                return socketReference = (socketReference == null) ? FindObjectOfType<SocketIOController>().socketIO : socketReference;
             }
         }
 

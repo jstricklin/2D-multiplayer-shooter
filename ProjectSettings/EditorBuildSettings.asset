@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Online.unity
     guid: ba9684dfb279c4058ab2b75633783093
+  - enabled: 0
+    path: Assets/UnitySocketIO/Scenes/TestScene.unity
+    guid: 19c5c1abf6190b342a43bb1839f4c4cd
   m_configObjects: {}

@@ -13,7 +13,7 @@ namespace UnitySocketIO.IO {
                 return new SocketIOEvent(e);
             }
 
-            return new SocketIOEvent(e, JsonUtility.FromJson<JSONObject>(data[1].TrimEnd(']')));
+            return new SocketIOEvent(e, data[1].TrimEnd(']'));
         }
 
         public string ParseData(string json) {

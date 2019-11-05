@@ -60,7 +60,7 @@ namespace UnitySocketIO.IO {
                 builder.Append(packet.id);
             }
 
-            if(packet.json[0].str != "") {
+            if(packet.json != "") {
                 builder.Append(packet.json);
             }
 

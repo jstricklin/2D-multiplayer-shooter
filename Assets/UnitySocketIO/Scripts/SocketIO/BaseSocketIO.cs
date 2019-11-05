@@ -20,8 +20,8 @@ namespace UnitySocketIO.SocketIO {
 
         public virtual void Emit(string e) { }
         public virtual void Emit(string e, Action<string> action) { }
-        public virtual void Emit(string e, JSONObject data) { }
-        public virtual void Emit(string e, JSONObject data, Action<string> action) { }
+        public virtual void Emit(string e, string data) { }
+        public virtual void Emit(string e, string data, Action<string> action) { }
 
         public virtual void On(string e, Action<SocketIOEvent> callback) { }
         public virtual void Off(string e, Action<SocketIOEvent> callback) { }

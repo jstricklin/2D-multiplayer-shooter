@@ -91,7 +91,7 @@ namespace UnitySocketIO.SocketIO {
             ");
         }
 
-        public override void Emit(string e, JSONObject data) {
+        public override void Emit(string e, string data) {
             Application.ExternalEval(@"
                 if(typeof window.socketIO !== 'undefined')
                     window.socketIO.emit('" + e + @"', " + data + @");
@@ -117,7 +117,7 @@ namespace UnitySocketIO.SocketIO {
             ackList.Add(new Ack(packetID, action));
         }
 
-        public override void Emit(string e, JSONObject data, Action<string> action) {
+        public override void Emit(string e, string data, Action<string> action) {
             packetID++;
 
             Application.ExternalEval(@"

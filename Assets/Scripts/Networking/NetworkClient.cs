@@ -51,14 +51,14 @@ namespace Project.Networking {
             });
 
             On("register", (e) => {
-                Debug.Log(e.data);
-                // ClientID = e.data["id"].ToString().RemoveQuotes();
-                // Debug.LogFormat("Our Client's Id is ({0})", ClientID);
+                ClientID = new JSONObject(e.data)["id"].str;
+                Debug.LogFormat("Our Client's Id is ({0})", ClientID);
             });
 
             On("spawn", (e) => {
                 // handling all spawned players
-                string id = e.data["id"].ToString().RemoveQuotes();
+                string id = new JSONObject(e.data)["id"].str;
+                Debug.Log(id + " spawn.");
 
                 GameObject go = Instantiate(playerGO, networkContainer);
                 go.name = string.Format("Player ({0})", id);
@@ -69,7 +69,7 @@ namespace Project.Networking {
             });
 
             On("disconnected", (e) => {
-                string id = e.data["id"].ToString().RemoveQuotes();
+                string id = new JSONObject(e.data)["id"].str;
                 Debug.Log("player disconnected");
                 GameObject go = serverObjects[id].gameObject;
                 Destroy(go); // remove GO from game
@@ -77,27 +77,30 @@ namespace Project.Networking {
             });
 
             On("updateRotation", (e) => {
-                string id = e.data["id"].ToString().RemoveQuotes();
-                float weaponRot = e.data["weaponRotation"].f;
-                bool flipped = e.data["playerFlipped"].b;
+                JSONObject data = new JSONObject(e.data);
+                string id = data["id"].ToString().RemoveQuotes();
+                float weaponRot = data["weaponRotation"].f;
+                bool flipped = data["playerFlipped"].b;
                 NetworkIdentity ni = serverObjects[id];
                 // Debug.Log("updating other rotations");
                 ni.GetComponent<PlayerManager>().SetWeaponRotation(weaponRot);
             });
 
             On("updatePosition", (e) => {
-                string id = e.data["id"].ToString().RemoveQuotes();
-                float x = e.data["position"]["x"].f;
-                float y = e.data["position"]["y"].f;
+                JSONObject data = new JSONObject(e.data);
+                string id = data["id"].ToString().RemoveQuotes();
+                float x = data["position"]["x"].f;
+                float y = data["position"]["y"].f;
                 NetworkIdentity ni = serverObjects[id];
                 ni.transform.position = new Vector3(x, y, 0);
             });
 
             On("serverSpawn", (e) => {
-                string name = e.data["name"].str;
-                string id = e.data["id"].ToString().RemoveQuotes();
-                float x = e.data["position"]["x"].f;
-                float y = e.data["position"]["y"].f;
+                JSONObject data = new JSONObject(e.data);
+                string name = data["name"].str;
+                string id = data["id"].ToString().RemoveQuotes();
+                float x = data["position"]["x"].f;
+                float y = data["position"]["y"].f;
                 if (!serverObjects.ContainsKey(id))
                 {
                     // Debug.LogFormat("Server wants to spawn '{0}'", name);
@@ -111,10 +114,10 @@ namespace Project.Networking {
                     // if projectile apply direction as well
                     if (name == "Arrow_Regular") 
                     {
-                        float directionX = e.data["direction"]["x"].f;
-                        float directionY = e.data["direction"]["y"].f;
-                        string activator = e.data["activator"].ToString().RemoveQuotes();
-                        float speed = e.data["speed"].f;
+                        float directionX = data["direction"]["x"].f;
+                        float directionY = data["direction"]["y"].f;
+                        string activator = data["activator"].ToString().RemoveQuotes();
+                        float speed = data["speed"].f;
 
                         float rot = Mathf.Atan2(directionY, directionX) * Mathf.Rad2Deg;
                         Vector3 currentRotation = new Vector3(0, 0, rot + 180);
@@ -131,20 +134,21 @@ namespace Project.Networking {
                 }
             });
             On("serverDespawn", (e) => {
-                string id = e.data["id"].ToString().RemoveQuotes();
+                string id = new JSONObject(e.data)["id"].str;
                 NetworkIdentity ni = serverObjects[id];
                 serverObjects.Remove(id);
                 Destroy(ni.gameObject);
             });
             On("playerDied", (e) => {
-                string id = e.data["id"].ToString().RemoveQuotes();
+                string id = new JSONObject(e.data)["id"].str;
                 NetworkIdentity ni = serverObjects[id];
                 ni.gameObject.SetActive(false);
             });
             On("playerRespawn", (e) => {
-                string id = e.data["id"].ToString().RemoveQuotes();
-                float x = e.data["position"]["x"].f;
-                float y = e.data["position"]["y"].f;
+                JSONObject data = new JSONObject(e.data);
+                string id = data["id"].ToString().RemoveQuotes();
+                float x = data["position"]["x"].f;
+                float y = data["position"]["y"].f;
                 NetworkIdentity ni = serverObjects[id];
                 ni.transform.position = new Vector3(x, y, 0);
                 ni.gameObject.SetActive(true);

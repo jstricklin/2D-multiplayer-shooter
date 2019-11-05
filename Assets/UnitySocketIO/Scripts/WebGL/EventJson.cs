@@ -5,6 +5,6 @@ namespace UnitySocketIO.WebGL {
     [System.Serializable]
     public class EventJson {
         public string socketEvent;
-        public JSONObject eventData;
+        public string eventData;
     }
 }

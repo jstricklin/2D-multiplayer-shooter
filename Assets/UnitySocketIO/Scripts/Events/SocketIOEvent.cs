@@ -35,13 +35,13 @@ namespace UnitySocketIO.Events {
 
         public string name;
 
-		public JSONObject data;
+        public string data;
 
         public SocketIOEvent(string name) {
             this.name = name;
         }
 
-        public SocketIOEvent(string name, JSONObject data) {
+        public SocketIOEvent(string name, string data) {
             this.name = name;
             this.data = data;
         }

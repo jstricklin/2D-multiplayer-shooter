@@ -155,20 +155,20 @@ namespace UnitySocketIO.SocketIO {
 
 
         public override void Emit(string e) {
-            EmitMessage(-1, new JSONObject(string.Format("[\"{0}\"]", e)));
+            EmitMessage(-1, string.Format("[\"{0}\"]", e));
         }
 
         public override void Emit(string e, Action<string> action) {
-            EmitMessage(++packetID, new JSONObject(string.Format("[\"{0}\"]", e)));
+            EmitMessage(++packetID, string.Format("[\"{0}\"]", e));
             ackList.Add(new Ack(packetID, action));
         }
 
-        public override void Emit(string e, JSONObject data) {
-            EmitMessage(-1, new JSONObject(string.Format("[\"{0}\",{1}]", e, data)));
+        public override void Emit(string e, string data) {
+            EmitMessage(-1, string.Format("[\"{0}\",{1}]", e, data));
         }
 
-        public override void Emit(string e, JSONObject data, Action<string> action) {
-            EmitMessage(++packetID, new JSONObject(string.Format("[\"{0}\",{1}]", e, data)));
+        public override void Emit(string e, string data, Action<string> action) {
+            EmitMessage(++packetID, string.Format("[\"{0}\",{1}]", e, data));
             ackList.Add(new Ack(packetID, action));
         }
 
@@ -295,13 +295,13 @@ namespace UnitySocketIO.SocketIO {
 
 
         void HandleOpen(SocketPacket packet) {
-            SocketID = JsonUtility.FromJson<SocketOpenData>(packet.json.keys[0]).sid;
+            SocketID = JsonUtility.FromJson<SocketOpenData>(packet.json).sid;
 
             EmitEvent("open");
         }
 
         void HandleMessage(SocketPacket packet) {
-            if(packet.json.keys[0] == "")
+            if(packet.json == "")
                 return;
 
             if(packet.socketPacketType == SocketPacketType.ACK) {
@@ -318,9 +318,7 @@ namespace UnitySocketIO.SocketIO {
             }
 
             if(packet.socketPacketType == SocketPacketType.EVENT) {
-                // SocketIOEvent e = parser.Parse(packet.json);
-                SocketIOEvent e = new SocketIOEvent(packet.json.keys[0], packet.json[0]);
-                Debug.Log("event... " + e.data);
+                SocketIOEvent e = parser.Parse(packet.json);
 
                 lock(eventQueueLock) {
                     eventQueue.Enqueue(e);
@@ -351,12 +349,12 @@ namespace UnitySocketIO.SocketIO {
             }
         }
 
-        void EmitMessage(int id, JSONObject json) {
+        void EmitMessage(int id, string json) {
             EmitPacket(new SocketPacket(EnginePacketType.MESSAGE, SocketPacketType.EVENT, 0, "/", id, json));
         }
 
         void EmitClose() {
-            EmitPacket(new SocketPacket(EnginePacketType.MESSAGE, SocketPacketType.DISCONNECT, 0, "/", -1, new JSONObject()));
+            EmitPacket(new SocketPacket(EnginePacketType.MESSAGE, SocketPacketType.DISCONNECT, 0, "/", -1, JsonUtility.ToJson("")));
             EmitPacket(new SocketPacket(EnginePacketType.CLOSE));
         }
 
@@ -373,7 +371,7 @@ namespace UnitySocketIO.SocketIO {
 
                 ack = ackList[i];
                 ackList.RemoveAt(i);
-                ack.Invoke(packet.json[0].str);
+                ack.Invoke(parser.ParseData(packet.json));
 
                 return;
             }

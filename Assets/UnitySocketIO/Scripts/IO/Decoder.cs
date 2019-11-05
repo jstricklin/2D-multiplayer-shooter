@@ -88,7 +88,7 @@ namespace UnitySocketIO.IO {
             }
 
             if(++offset < data.Length - 1) {
-                packet.json[0].str = data.Substring(offset);
+                packet.json = data.Substring(offset);
             }
 
             return packet;

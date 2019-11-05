@@ -17,9 +17,9 @@ namespace Project.Gameplay {
             NetworkIdentity ni = collision.gameObject.GetComponent<NetworkIdentity>();
             if (ni == null || ni.GetID() != whoActivatedMe.GetActivator())
             {
-                networkIdentity.GetSocket().Emit("collisionDestroy", new JSONObject(JsonUtility.ToJson(new IDData() {
+                networkIdentity.GetSocket().Emit("collisionDestroy", JsonUtility.ToJson(new IDData() {
                     id = networkIdentity.GetID(),
-                })));
+                }));
             }
         }
     }

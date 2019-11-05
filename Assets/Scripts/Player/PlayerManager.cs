@@ -64,7 +64,7 @@ namespace Project.Player {
                 projectileData.direction.x = projectileSpawn.up.x;
                 projectileData.direction.y = projectileSpawn.up.y;
                 //send bullet
-                networkIdentity.GetSocket().Emit("fireProjectile", new JSONObject(JsonUtility.ToJson(projectileData)));
+                networkIdentity.GetSocket().Emit("fireProjectile", JsonUtility.ToJson(projectileData));
             }
         }
 

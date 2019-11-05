@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Project.Networking
 {
-    public class NetworkIdentity : SocketIOController
+    public class NetworkIdentity : BaseSocketIO
     {
         [Header("Helpful Values")]
         [SerializeField]

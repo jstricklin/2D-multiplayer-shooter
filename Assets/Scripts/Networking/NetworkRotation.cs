@@ -68,7 +68,7 @@ namespace Project.Networking
             player.rotation.playerFlipped = playerManager.GetLastFlipped();
 
             // serialized player class makes it easy to convert to JSON
-            networkIdentity.GetSocket().Emit("updateRotation", new JSONObject(JsonUtility.ToJson(player)));
+            networkIdentity.GetSocket().Emit("updateRotation", JsonUtility.ToJson(player));
         }
     }
 }

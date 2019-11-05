@@ -39,13 +39,13 @@ namespace UnitySocketIO.Packet {
         public int attachments;
         public string nsp;
         public int id;
-        public JSONObject json;
+        public string json;
 
         public SocketPacket() : this(EnginePacketType.UNKNOWN) { }
 
-        public SocketPacket(EnginePacketType enginePacketType) : this(enginePacketType, SocketPacketType.UNKNOWN, -1, "/", -1, new JSONObject()) { }
+        public SocketPacket(EnginePacketType enginePacketType) : this(enginePacketType, SocketPacketType.UNKNOWN, -1, "/", -1, "") { }
 
-        public SocketPacket(EnginePacketType enginePacketType, SocketPacketType socketPacketType, int attachments, string nsp, int id, JSONObject json) {
+        public SocketPacket(EnginePacketType enginePacketType, SocketPacketType socketPacketType, int attachments, string nsp, int id, string json) {
             this.enginePacketType = enginePacketType;
             this.socketPacketType = socketPacketType;
             this.attachments = attachments;

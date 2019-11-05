@@ -39,10 +39,10 @@ namespace UnitySocketIO {
         public void Emit(string e, Action<string> action) {
             socketIO.Emit(e, action);
         }
-        public void Emit(string e, JSONObject data) {
+        public void Emit(string e, string data) {
             socketIO.Emit(e, data);
         }
-        public void Emit(string e, JSONObject data, Action<string> action) {
+        public void Emit(string e, string data, Action<string> action) {
             socketIO.Emit(e, data, action);
         }
 

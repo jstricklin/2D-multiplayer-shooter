@@ -61,7 +61,7 @@ namespace Project.Networking
             player.position.y = transform.position.y.TwoDecimals();
 
             // serialized player class makes it easy to convert to JSON
-            networkIdentity.GetSocket().Emit("updatePosition", new JSONObject(JsonUtility.ToJson(player)));
+            networkIdentity.GetSocket().Emit("updatePosition", JsonUtility.ToJson(player));
         }
     }
 }

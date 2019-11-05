@@ -16,15 +16,15 @@ public class SocketTest : MonoBehaviour {
             t.test = 123;
             t.test2 = "test1";
 
-            // io.Emit("test-event2", JsonUtility.ToJson(t));
+            io.Emit("test-event2", JsonUtility.ToJson(t));
 
             TestObject t2 = new TestObject();
             t2.test = 1234;
             t2.test2 = "test2";
 
-            // io.Emit("test-event3", JsonUtility.ToJson(t2), (string data) => {
-            //     Debug.Log(data);
-            // });
+            io.Emit("test-event3", JsonUtility.ToJson(t2), (string data) => {
+                Debug.Log(data);
+            });
 
         });
 

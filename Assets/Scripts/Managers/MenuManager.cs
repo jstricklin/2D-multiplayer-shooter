@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using Project.Networking;
 using Project.Utility;
-using SocketIO;
+using UnitySocketIO;
+using UnitySocketIO.SocketIO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,10 +13,10 @@ namespace Project.Managers {
         [SerializeField]
         private Button queueButton;
 
-        private SocketIOComponent socketReference;
-        private SocketIOComponent SocketReference {
+        private BaseSocketIO socketReference;
+        private BaseSocketIO SocketReference {
             get {
-                return socketReference = (socketReference == null) ? FindObjectOfType<NetworkClient>() : socketReference;
+                return socketReference = (socketReference == null) ? FindObjectOfType<NetworkClient>().socketIO : socketReference;
             }
         }
 
@@ -32,7 +33,7 @@ namespace Project.Managers {
         {
             // lazy loading
             // Debug.Log("socket reference: " + SocketReference.GetInstanceID());
-            SocketReference.Emit(ev: "joinGame");
+            SocketReference.Emit("joinGame");
         }
     }
 

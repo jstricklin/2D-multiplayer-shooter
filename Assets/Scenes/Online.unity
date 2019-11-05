@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -179,12 +180,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22acd357134b9489a967f8940301cc59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  url: ws://multiplayer-shooter-2d.herokuapp.com:80/socket.io/?EIO=4&transport=websocket
-  autoConnect: 1
-  reconnectDelay: 5
-  ackExpirationTime: 1800
-  pingInterval: 25
-  pingTimeout: 60
+  settings:
+    url: 127.0.0.1
+    port: 52300
+    sslEnabled: 0
+    reconnectTime: 5
+    timeToDropAck: 4
+    pingTimeout: 30
+    pingInterval: 10
+  socketIO: {fileID: 0}
   networkContainer: {fileID: 910911684}
   playerGO: {fileID: 4081714164579572075, guid: ed8963226141a43dbad5ef583502732e,
     type: 3}

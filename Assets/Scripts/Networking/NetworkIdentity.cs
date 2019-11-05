@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Project.Utility.Attributes;
-using SocketIO;
+using UnitySocketIO;
+using UnitySocketIO.SocketIO;
 using UnityEngine;
 
 namespace Project.Networking
 {
-    public class NetworkIdentity : MonoBehaviour
+    public class NetworkIdentity : SocketIOController
     {
         [Header("Helpful Values")]
         [SerializeField]
@@ -16,7 +17,7 @@ namespace Project.Networking
         [GreyOut]
         private bool isControlling;
 
-        private SocketIOComponent socket;
+        private BaseSocketIO socket;
 
         void Awake()
         {
@@ -29,7 +30,7 @@ namespace Project.Networking
             isControlling = (NetworkClient.ClientID == ID) ? true : false;  // check id against ours saved from server
         }
 
-        public void SetSocketReference(SocketIOComponent Socket)
+        public void SetSocketReference(BaseSocketIO Socket)
         {
             socket = Socket;
         }
@@ -42,7 +43,7 @@ namespace Project.Networking
             return isControlling;
         }
 
-        public SocketIOComponent GetSocket()
+        public BaseSocketIO GetSocket()
         {
             return socket;
         }

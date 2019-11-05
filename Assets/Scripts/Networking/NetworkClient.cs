@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using SocketIO;
+using UnitySocketIO;
+using UnitySocketIO.SocketIO;
 using Project.Utility;
 using Project.Player;
 using Project.Scriptable;
 using Project.Gameplay;
 
 namespace Project.Networking {
-    public class NetworkClient : SocketIOComponent
+    public class NetworkClient : SocketIOController
     {
         // this value should be server interval update time divided by 10
         public const float SERVER_UPDATE_TIME = 10;
@@ -25,9 +26,9 @@ namespace Project.Networking {
         private Dictionary<string, NetworkIdentity> serverObjects;
                 
         // Start is called before the first frame update
-        public override void Start()
+        public void Start()
         {
-            base.Start();
+            base.Connect();
             Initialize();
             SetupEvents();
         }
@@ -38,10 +39,10 @@ namespace Project.Networking {
         }
 
         // Update is called once per frame
-        public override void Update()
-        {
-            base.Update();
-        }
+        // public override void Update()
+        // {
+        //     base.Update();
+        // }
         private void SetupEvents()
         {
             // Initial connection will connect just once, even if console displays TWO logs.
@@ -50,8 +51,9 @@ namespace Project.Networking {
             });
 
             On("register", (e) => {
-                ClientID = e.data["id"].ToString().RemoveQuotes();
-                Debug.LogFormat("Our Client's Id is ({0})", ClientID);
+                Debug.Log(e.data);
+                // ClientID = e.data["id"].ToString().RemoveQuotes();
+                // Debug.LogFormat("Our Client's Id is ({0})", ClientID);
             });
 
             On("spawn", (e) => {
@@ -62,7 +64,7 @@ namespace Project.Networking {
                 go.name = string.Format("Player ({0})", id);
                 NetworkIdentity ni = go.GetComponent<NetworkIdentity>();
                 ni.SetControllerID(id);
-                ni.SetSocketReference(this);
+                ni.SetSocketReference(this.socketIO);
                 serverObjects.Add(id, ni);
             });
 
@@ -104,7 +106,7 @@ namespace Project.Networking {
                     spawnObject.transform.position = new Vector3(x, y, 0);
                     NetworkIdentity ni = spawnObject.GetComponent<NetworkIdentity>();
                     ni.SetControllerID(id);
-                    ni.SetSocketReference(this);
+                    ni.SetSocketReference(this.socketIO);
 
                     // if projectile apply direction as well
                     if (name == "Arrow_Regular") 

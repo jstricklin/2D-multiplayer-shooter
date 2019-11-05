@@ -58,7 +58,6 @@ namespace Project.Networking {
             On("spawn", (e) => {
                 // handling all spawned players
                 string id = new JSONObject(e.data)["id"].str;
-                Debug.Log(id + " spawn.");
 
                 GameObject go = Instantiate(playerGO, networkContainer);
                 go.name = string.Format("Player ({0})", id);
@@ -154,7 +153,6 @@ namespace Project.Networking {
                 ni.gameObject.SetActive(true);
             });
             On("loadGame", (e) => {
-                Debug.Log("switching to game");
                 SceneManagementManager.Instance.LoadLevel(levelName: SceneList.LEVEL, onLevelLoaded: (levelName) => {
                     SceneManagementManager.Instance.UnLoadLevel(SceneList.MAIN_MENU);
                 });

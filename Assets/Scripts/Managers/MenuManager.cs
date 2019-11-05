@@ -32,7 +32,6 @@ namespace Project.Managers {
         public void OnQueue()
         {
             // lazy loading
-            // Debug.Log("socket reference: " + SocketReference.GetInstanceID());
             SocketReference.Emit("joinGame");
         }
     }

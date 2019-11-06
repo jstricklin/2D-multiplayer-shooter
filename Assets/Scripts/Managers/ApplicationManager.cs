@@ -8,9 +8,7 @@ namespace Project.Managers {
 
         public void Start() 
         {
-            SceneManagementManager.Instance.LoadLevel(levelName: SceneList.MAIN_MENU, onLevelLoaded: (levelName) => {
-
-            });
+            SceneManagementManager.Instance.LoadLevel(levelName: SceneList.MAIN_MENU, onLevelLoaded: (levelName) => { });
         }
 
     }

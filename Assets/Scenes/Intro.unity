@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -214,6 +215,7 @@ GameObject:
   - component: {fileID: 1816184388}
   - component: {fileID: 1816184387}
   - component: {fileID: 1816184389}
+  - component: {fileID: 1816184390}
   m_Layer: 0
   m_Name: Singletons
   m_TagString: Untagged
@@ -259,3 +261,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9227b7b3779e4ee5b42baef1a2bc6b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1816184390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1816184386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7e6021b6709d4841b7d36056e5d2743, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings:
+    url: localhost
+    port: 52300
+    sslEnabled: 0
+    reconnectTime: 500
+    timeToDropAck: 250
+    pingTimeout: 5
+    pingInterval: 10
+  socketIO: {fileID: 0}

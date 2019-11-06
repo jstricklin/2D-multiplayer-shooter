@@ -64,7 +64,7 @@ namespace UnitySocketIO.SocketIO {
 
         public override void Connect() {
             Application.ExternalEval(@"
-                console.log('" + this.GetComponentInParent<SocketIOController>().socketIO + @"')
+                console.log('attempting to connect')
                 window.socketIO = io.connect('http" + (settings.sslEnabled ? "s" : "") + @"://" + settings.url + (!settings.sslEnabled && settings.port != 0 ? ":" + settings.port.ToString() : "") + @"/');
                 
                 window.socketIO.on('connect', function(){

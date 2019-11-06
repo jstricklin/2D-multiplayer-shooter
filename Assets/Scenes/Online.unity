@@ -180,19 +180,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22acd357134b9489a967f8940301cc59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settings:
-    url: 127.0.0.1
-    port: 52300
-    sslEnabled: 0
-    reconnectTime: 500
-    timeToDropAck: 250
-    pingTimeout: 5
-    pingInterval: 10
-  socketIO: {fileID: 0}
   networkContainer: {fileID: 910911684}
   playerGO: {fileID: 4081714164579572075, guid: ed8963226141a43dbad5ef583502732e,
     type: 3}
   serverSpawnables: {fileID: 11400000, guid: 3cd598131e485452188eebdd99c95a34, type: 2}
+  io: {fileID: 0}
 --- !u!4 &1285138588
 Transform:
   m_ObjectHideFlags: 0

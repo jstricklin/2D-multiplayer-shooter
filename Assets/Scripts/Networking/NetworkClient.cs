@@ -30,9 +30,9 @@ namespace Project.Networking {
         // Start is called before the first frame update
         public void Start()
         {
+            Initialize();
             io = FindObjectOfType<SocketIOController>();
             io.Connect();
-            Initialize();
             SetupEvents();
         }
 
@@ -62,33 +62,28 @@ namespace Project.Networking {
                 // handling all spawned players
                 string id = new JSONObject(e.data)["id"].str;
 
+                Debug.Log("adding to server objects");
                 GameObject go = Instantiate(playerGO, networkContainer);
                 go.name = string.Format("Player ({0})", id);
                 NetworkIdentity ni = go.GetComponent<NetworkIdentity>();
                 ni.SetControllerID(id);
+                Debug.Log("socket: " + id);
                 ni.SetSocketReference(io.socketIO);
                 serverObjects.Add(id, ni);
             });
 
-            io.On("disconnected", (e) => {
-                string id = new JSONObject(e.data)["id"].str;
-                Debug.Log("player disconnected");
-                GameObject go = serverObjects[id].gameObject;
-                Destroy(go); // remove GO from game
-                serverObjects.Remove(id);
-            });
-
             io.On("updateRotation", (e) => {
+                Debug.Log("updating other rotations " + e.data);
                 JSONObject data = new JSONObject(e.data);
                 string id = data["id"].ToString().RemoveQuotes();
                 float weaponRot = data["weaponRotation"].f;
                 bool flipped = data["playerFlipped"].b;
                 NetworkIdentity ni = serverObjects[id];
-                // Debug.Log("updating other rotations");
                 ni.GetComponent<PlayerManager>().SetWeaponRotation(weaponRot);
             });
 
             io.On("updatePosition", (e) => {
+                Debug.Log("updating other positions " + e.data);
                 JSONObject data = new JSONObject(e.data);
                 string id = data["id"].ToString().RemoveQuotes();
                 float x = data["position"]["x"].f;
@@ -98,6 +93,7 @@ namespace Project.Networking {
             });
 
             io.On("serverSpawn", (e) => {
+                Debug.Log("server spawn!");
                 JSONObject data = new JSONObject(e.data);
                 string name = data["name"].str;
                 string id = data["id"].ToString().RemoveQuotes();
@@ -156,13 +152,24 @@ namespace Project.Networking {
                 ni.gameObject.SetActive(true);
             });
             io.On("loadGame", (e) => {
+                Debug.Log("switching to game");
                 SceneManagementManager.Instance.LoadLevel(levelName: SceneList.LEVEL, onLevelLoaded: (levelName) => {
                     SceneManagementManager.Instance.UnLoadLevel(SceneList.MAIN_MENU);
                 });
             });
+
+            io.On("disconnected", (e) => {
+                string id = new JSONObject(e.data)["id"].str;
+                Debug.Log("player disconnected " + serverObjects[id].SocketID);
+                GameObject go = serverObjects[id].gameObject;
+                Destroy(go); // remove GO from game
+                serverObjects.Remove(id);
+            });
+
         }
 
         public void AttemptToJoinLobby() {
+            Debug.Log("attempting join lobby");
             io.Emit("joinGame");
         }
     }

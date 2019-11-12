@@ -40,6 +40,7 @@ namespace UnitySocketIO {
             socketIO.Emit(e, action);
         }
         public void Emit(string e, string data) {
+            Debug.Log("controller emit data string: " + data);
             socketIO.Emit(e, data);
         }
         public void Emit(string e, string data, Action<string> action) {

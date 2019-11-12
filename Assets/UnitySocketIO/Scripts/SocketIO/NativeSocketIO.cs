@@ -354,7 +354,7 @@ namespace UnitySocketIO.SocketIO {
         }
 
         void EmitClose() {
-            EmitPacket(new SocketPacket(EnginePacketType.MESSAGE, SocketPacketType.DISCONNECT, 0, "/", -1, JsonUtility.ToJson("")));
+            EmitPacket(new SocketPacket(EnginePacketType.MESSAGE, SocketPacketType.DISCONNECT, 0, "/", -1, ""));
             EmitPacket(new SocketPacket(EnginePacketType.CLOSE));
         }
 
